@@ -18,7 +18,7 @@ This is the mobile version of the [Appointment Scheduler Web App](https://schedu
 ### [React Native GitHub](https://github.com/jglchen/react-native-scheduler-app)
 ### [View the Web Demo](https://scheduler-app-ten.vercel.app)
 ### [React GitHub](https://github.com/jglchen/scheduler-app)
-### Docker: docker run -p 3000:3000 jglchen//scheduler-app
+### Docker: docker run -p 3000:3000 jglchen/scheduler-app
 ### back To [Series Home](https://jglchen.github.io/)
 
 {% include giscus.html %}
