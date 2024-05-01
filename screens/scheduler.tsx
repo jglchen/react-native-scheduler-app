@@ -17,7 +17,7 @@ import { styles } from '../styles/css';
 import { UserContext } from '../components/Context';
 import { DOMAIN_URL } from '../lib/constants';
 import { getDateString } from '../lib/utils';
-import {UserContextType, Activity, User, ScheduleStore} from '../lib/types';
+import {UserContextType, Activity, User} from '../lib/types';
 
 export default function SchedulerScreen({ navigation, route }: { navigation: any; route: any}) {
   const userContext: UserContextType = useContext(UserContext);

@@ -34,8 +34,6 @@ export interface Activity {
     description: string;
 }
 
-export type ScheduleStore = string | Activity[];
-
 export interface MeetingTarget {
     name: string;
     email: string;

@@ -8,8 +8,7 @@ import { SafeAreaView,
          KeyboardAvoidingView, 
          Platform, 
          View, 
-         Text,
-         StyleSheet 
+         Text
 } from 'react-native';
 import { Button, TextInput, ActivityIndicator, Colors } from 'react-native-paper';
 import { styles } from '../styles/css';
