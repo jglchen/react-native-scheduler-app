@@ -17,9 +17,9 @@ export interface UserData {
 }
 
 export interface User {
-    id: string;
-    email: string;
-    name: string;
+    id?: string;
+    email?: string;
+    name?: string;
     token?: string;
     logintime?: number;
 }

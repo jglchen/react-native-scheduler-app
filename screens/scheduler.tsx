@@ -19,11 +19,11 @@ import { DOMAIN_URL } from '../lib/constants';
 import { getDateString } from '../lib/utils';
 import {UserContextType, Activity, User, ScheduleStore} from '../lib/types';
 
-export default function SchedulerScreen({ navigation, route }) {
+export default function SchedulerScreen({ navigation, route }: { navigation: any; route: any}) {
   const userContext: UserContextType = useContext(UserContext);
   const [initial, setInitial] = useState(true);
   const [activities, setActivities] = useState<Activity[]>([]);
-  const [currActivities, setCurrActivities] = useState([]);
+  const [currActivities, setCurrActivities] = useState<Activity[]>([]);
   const currDate = new Date();
   currDate.setHours(0, 0, 0, 0);
   const currNextDate = new Date(currDate.getTime() + 24 * 60 * 60 * 1000 -1);
@@ -44,7 +44,7 @@ export default function SchedulerScreen({ navigation, route }) {
   async function retrieveSchedule(user: User){
     try {
       const userId = await AsyncStorage.getItem('schedule_userid') || '';
-      let schedule: ScheduleStore;
+      let schedule: Activity[];
       if (user.id && userId !== user.id){
          await AsyncStorage.removeItem('schedule');
          await AsyncStorage.removeItem('schedule_recent');
@@ -53,14 +53,14 @@ export default function SchedulerScreen({ navigation, route }) {
          schedule = [];
       }else{
          //Set activites from AsyncStorage.getItem('schedule')
-         schedule = await AsyncStorage.getItem('schedule');
-         schedule = (JSON.parse(schedule) || []) as Activity[];
+         const scheduleStore: string | null = await AsyncStorage.getItem('schedule');
+         schedule = scheduleStore ? JSON.parse(scheduleStore): [];
       }
       setActivities(schedule);
       //Fetch recent data from database
       const currTime = new Date().getTime() / 1000;
-      let fetchTime: string | number =  await AsyncStorage.getItem('fetchtime');
-      fetchTime = (parseFloat(fetchTime) || 0) as number;
+      const fetchTimeStore: string | null = await AsyncStorage.getItem('fetchtime');
+      const fetchTime = fetchTimeStore ? parseFloat(fetchTimeStore): 0;
       if ((currTime - fetchTime) > 10 * 60){
         fetchSchedule(schedule, user);
       }
@@ -118,12 +118,11 @@ export default function SchedulerScreen({ navigation, route }) {
          (item.startTime <= startDateTime && item.endTime >= endDateTime) || 
          (item.startTime < startDateTime && item.endTime < endDateTime && item.endTime > startDateTime) || 
          (item.startTime > startDateTime && item.startTime < endDateTime && item.endTime > endDateTime)
-      ).sort(function(a, b) {
-         if (a.startTime > b.startTime) return 1;
-         if (a.startTime == b.startTime) return 0;
-         if (a.startTime < b.startTime) return -1;
+      ).sort(function(a, b): number {
+         if (a.startTime > b.startTime) {return 1}
+         else if(a.startTime == b.startTime){return 0}
+         else{return -1};
       });
-      
       setCurrActivities(selectedAct);
       
       if (initial){

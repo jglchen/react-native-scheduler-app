@@ -1,8 +1,10 @@
 import React, { createContext } from 'react';
+import { User } from '../lib/types';
+
 
 export const UserContext = createContext({
     isLoggedIn: false,
-    user: null,
+    user: {},
     login: () => { },
     logout: () => { }
 });

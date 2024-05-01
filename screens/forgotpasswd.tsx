@@ -17,7 +17,7 @@ import { UserContext } from '../components/Context';
 import { DOMAIN_URL } from '../lib/constants';
 import {UserContextType} from '../lib/types';
 
-export default function ForgotPasswd({ route, navigation }) {
+export default function ForgotPasswd({ route, navigation }: { route: any; navigation: any; }) {
     const { userEmail } = route.params;
     const userContext: UserContextType = useContext(UserContext);
     const [email, setEmail] = useState(userEmail);
@@ -53,14 +53,14 @@ export default function ForgotPasswd({ route, navigation }) {
       //Check if Email is filled
       if (!email){
           setEmailErr("Please type your email, this field is required!");
-          emailEl.current.focus();
+          (emailEl.current as any).focus();
           return;
        }
        
        //Validate the email
        if (!validator.validate(email)){
            setEmailErr("This email is not a legal email.");
-           emailEl.current.focus();
+           (emailEl.current as any).focus();
            return;
        }
        
@@ -69,7 +69,7 @@ export default function ForgotPasswd({ route, navigation }) {
        setInPost(false);
        if (data.no_account){
           setEmailErr("Sorry, we can't find this account.");
-          emailEl.current.focus();
+          (emailEl.current as any).focus();
           return;
        }
        if (data.mail_sent){
@@ -81,9 +81,9 @@ export default function ForgotPasswd({ route, navigation }) {
 
     function submitNumberCheck(){
       setNumchkerr('');
-      if (checkdata && numForCheck != checkdata.numForCheck){
+      if (checkdata && numForCheck != checkdata['numForCheck']){
          setNumchkerr('The number you typed is not matched to the figure in the email.');
-         numchkEl.current.focus();
+         (numchkEl.current as any).focus();
          return;
       }
     }
@@ -96,16 +96,16 @@ export default function ForgotPasswd({ route, navigation }) {
        if (!passwd || !passwd2){
           setPassWdErr("Please type your password, this field is required!");
           if (!passwd){
-             passwdEl.current.focus();
+             (passwdEl.current as any).focus();
           }else{
-             passwd2El.current.focus();
+             (passwd2El.current as any).focus();
           }
           return;
        }
        //Check the passwords typed in the two fields are matched
        if (passwd != passwd2){
           setPassWdErr("Please retype your passwords, the passwords you typed in the two fields are not matched!");
-          passwdEl.current.focus();
+          (passwdEl.current as any).focus();
           return;
        }
 
@@ -120,11 +120,11 @@ export default function ForgotPasswd({ route, navigation }) {
         .has().not().spaces();                          // Should not have spaces
        if (!schema.validate(passwd)){
           setPassWdErr("The password you typed is not enough secured, please retype a new one. The password must have both uppercase and lowercase letters as well as minimum 2 digits.");
-          passwdEl.current.focus();
+          (passwdEl.current as any).focus();
           return;
        }
 
-       const headers = { authorization: `Bearer ${checkdata.token}` };
+       const headers = { authorization: `Bearer ${checkdata ? checkdata['token']:''}` };
        setInPost(true);
        const {data} = await axios.post(`${DOMAIN_URL}/api/resetpasswd`, {password: passwd}, { headers: headers });
        setInPost(false);
@@ -158,7 +158,7 @@ export default function ForgotPasswd({ route, navigation }) {
                  </View>
                  {checkdata &&
                  <>
-                 {numForCheck == checkdata.numForCheck &&
+                 {numForCheck == checkdata['numForCheck'] &&
                  <>
                   <Text style={styles.headingText}>Please reset your password</Text>
                   <TextInput
@@ -190,7 +190,7 @@ export default function ForgotPasswd({ route, navigation }) {
                    </View>
                  </>
                  }
-                 {numForCheck != checkdata.numForCheck &&
+                 {numForCheck != checkdata['numForCheck'] &&
                  <>
                   <Text style={styles.headingText}>Email for password reset has been already sent! Please check the email we sent to you, and type the number in the following.</Text>
                   <TextInput

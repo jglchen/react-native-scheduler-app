@@ -15,7 +15,7 @@ import { UserContext } from '../components/Context';
 import { DOMAIN_URL } from '../lib/constants';
 import {UserContextType} from '../lib/types';
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ navigation }: { navigation: any}) {
   const userContext: UserContextType = useContext(UserContext);
   const initialState = {
       email: '',
@@ -49,19 +49,19 @@ export default function LoginScreen({ navigation }) {
     //Check if Email is filled
     if (!user.email){
        setEmailErr("Please type your email, this field is required!");
-       emailEl.current.focus();
+       (emailEl.current as any).focus();
        return;
     }
     //Validate the email
     if (!validator.validate(user.email)){
         setEmailErr("This email is not a legal email.");
-        emailEl.current.focus();
+        (emailEl.current as any).focus();
         return;
     }
     //Check if Passwd is filled
     if (!user.password){
         setPassWdErr("Please type your password, this field is required!");
-        passwdEl.current.focus();
+        (passwdEl.current as any).focus();
         return;
     }
 
@@ -71,12 +71,12 @@ export default function LoginScreen({ navigation }) {
 
     if (data.no_account){
         setEmailErr("Sorry, we can't find this account.");
-        emailEl.current.focus();
+        (emailEl.current as any).focus();
         return;
     }
     if (data.password_error){
         setPassWdErr("Password error");
-        passwdEl.current.focus();
+        (passwdEl.current as any).focus();
         return;
     }
     const {token, ...others} = data;

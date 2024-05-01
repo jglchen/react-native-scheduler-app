@@ -20,9 +20,9 @@ import { styles } from '../styles/css';
 import { UserContext } from '../components/Context';
 import { DOMAIN_URL } from '../lib/constants';
 import { timezone, getDateString } from '../lib/utils';
-import {UserContextType, Activity, ScheduleStore, User} from '../lib/types';
+import {UserContextType, Activity, User, MeetingTarget} from '../lib/types';
 
-export default function ActivityDetail({ navigation, route }) {
+export default function ActivityDetail({ navigation, route }: {navigation: any; route: any;}) {
   const userContext: UserContextType = useContext(UserContext);
   const { activityObj } = route.params || {};
   const [inEditing, setInEditing] = useState(false);
@@ -33,7 +33,7 @@ export default function ActivityDetail({ navigation, route }) {
   const [startDatePicker, setStartDatePicker] = useState(false);
   const [endDatePicker, setEndDatePicker] = useState(false);
   const [dateserr, setDatesErr] = useState('');
-  const [errDescr, setErrDescr] = useState([]);
+  const [errDescr, setErrDescr] = useState<string[]>([]);
 
   useFocusEffect(
     useCallback(() => {
@@ -42,7 +42,7 @@ export default function ActivityDetail({ navigation, route }) {
   );
 
   function adjustErrDescr(){
-    const errDes = [];
+    const errDes: string[] = [];
     for (let i = 0; i < activity.meetingTargets.length; i++){
         errDes.push('');
     }
@@ -122,7 +122,7 @@ export default function ActivityDetail({ navigation, route }) {
     if (!activity.meetingTargets.length){
        return;
     }
-    const mTargets = [];
+    const mTargets: MeetingTarget[] = [];
     const errDes = [];
     for (let i = 0; i < activity.meetingTargets.length; i++){
        if (activity.meetingTargets[i].name.trim()){
@@ -149,7 +149,7 @@ export default function ActivityDetail({ navigation, route }) {
       if (!activity.title.trim()){
          setActivity((prevState) => ({...prevState, title: activity.title.trim()}));
          setTitleErr("Please type title, this field is required!");
-         titleEl.current.focus();
+         (titleEl.current as any).focus();
          return;
       }
       //Check if Dates is selected
@@ -188,8 +188,8 @@ export default function ActivityDetail({ navigation, route }) {
          alert("No authorization to update this scheduled activity!");
          return;
       }
-      let schedule: ScheduleStore = await AsyncStorage.getItem('schedule');
-      schedule = (JSON.parse(schedule) || []) as Activity[];
+      const scheduleStore: string | null = await AsyncStorage.getItem('schedule');
+      const schedule:  Activity[] = scheduleStore ? JSON.parse(scheduleStore): [];
       const idx = schedule.findIndex(item => item.id == data.id);
       if (idx > -1){
         schedule[idx] = data;
@@ -228,8 +228,8 @@ export default function ActivityDetail({ navigation, route }) {
       }
       
       //Save the resultant schedule to AsyncStorage
-      let schedule: ScheduleStore = await AsyncStorage.getItem('schedule');
-      schedule = (JSON.parse(schedule) || []) as Activity[];
+      const scheduleStore: string | null = await AsyncStorage.getItem('schedule');
+      const schedule:  Activity[] = scheduleStore ? JSON.parse(scheduleStore): [];
       const sch = schedule.filter((item) => item.id != activityObj.id);
       await AsyncStorage.setItem('schedule', JSON.stringify(sch));
       navigation.navigate('Scheduler');
@@ -412,7 +412,7 @@ export default function ActivityDetail({ navigation, route }) {
             <> 
             <View style={styles.listItem}>
               <Text style={{fontSize: 16, lineHeight: 24}}>Meeting Targets:</Text>
-              {activityObj.meetingTargets.map((item, index) =>
+              {activityObj.meetingTargets.map((item: MeetingTarget, index: number) =>
               <View key={index} style={styles.itemLeft}>
                 <Text style={{fontSize: 16, lineHeight: 24}}>{item.name}{item.email ? ` - ${item.email}`: ''}    </Text>
                 {item.confirm &&

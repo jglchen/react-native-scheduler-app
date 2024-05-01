@@ -16,7 +16,7 @@ import { UserContext } from '../components/Context';
 import { DOMAIN_URL } from '../lib/constants';
 import {UserContextType} from '../lib/types';
 
-export default function UserJoin({ navigation }) {
+export default function UserJoin({ navigation }: { navigation: any}) {
   const userContext: UserContextType = useContext(UserContext);
   const initialState = {
        name: '',
@@ -67,35 +67,35 @@ export default function UserJoin({ navigation }) {
     if (!user.name.trim()){
       setUser(prevState => ({ ...prevState, name: user.name.trim() })) 
       setNameErr("Please type your name, this field is required!");
-      nameEl.current.focus();
+      (nameEl.current as any).focus();
       return;
     }
     //Check if Email is filled
     if (!user.email){
       setEmailErr("Please type your email, this field is required!");
-      emailEl.current.focus();
+      (emailEl.current as any).focus();
       return;
     }
     //Validate the email
     if (!validator.validate(user.email)){
       setEmailErr("This email is not validated OK, please enter a legal email.");
-      emailEl.current.focus();
+      (emailEl.current as any).focus();
       return;
     }
     //Check if Passwd is filled
     if (!user.password || !password2){
       setPassWdErr("Please type your password, this field is required!");
       if (!user.password){
-        passwdEl.current.focus();
+        (passwdEl.current as any).focus();
       }else{
-        passwd2El.current.focus();
+        (passwd2El.current as any).focus();
       }
       return;
     }
     //Check the passwords typed in the two fields are matched
     if (user.password != password2){
       setPassWdErr("Please retype your passwords, the passwords you typed in the two fields are not matched!");
-      passwdEl.current.focus();
+     (passwdEl.current as any).focus();
       return;
     }
  
@@ -110,7 +110,7 @@ export default function UserJoin({ navigation }) {
     .has().not().spaces();                          // Should not have spaces
     if (!schema.validate(user.password)){
       setPassWdErr("The password you typed is not enough secured, please retype a new one. The password must have both uppercase and lowercase letters as well as minimum 2 digits.");
-      passwdEl.current.focus();
+      (passwdEl.current as any).focus();
       return;
     }
 
@@ -119,7 +119,7 @@ export default function UserJoin({ navigation }) {
     setInPost(false);
     if (data.duplicate_email){
        setEmailErr("This email has been registered as a user, please use a different email to sign up.");
-       emailEl.current.focus();
+       (emailEl.current as any).focus();
        return;
     }
     const {token, ...others} = data;

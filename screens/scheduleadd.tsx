@@ -16,9 +16,9 @@ import { styles } from '../styles/css';
 import { UserContext } from '../components/Context';
 import { timezone, getDateString } from '../lib/utils';
 import { DOMAIN_URL } from '../lib/constants';
-import {UserContextType, Activity, ScheduleStore} from '../lib/types';
+import {UserContextType, Activity, MeetingTarget} from '../lib/types';
 
-export default function AddSchedule({ navigation }) {
+export default function AddSchedule({ navigation }: { navigation: any}) {
   const userContext: UserContextType = useContext(UserContext);
   const [title, setTitle] = useState('');
   const [titleerr, setTitleErr] = useState('');
@@ -33,8 +33,8 @@ export default function AddSchedule({ navigation }) {
   const [endDate, setEndDate] = useState(endTime);
   const [endDatePicker, setEndDatePicker] = useState(false);
   const [dateserr, setDatesErr] = useState('');
-  const [meetingTargets, setMeetingTargets] = useState([]);
-  const [errDescr, setErrDescr] = useState([]);
+  const [meetingTargets, setMeetingTargets] = useState<MeetingTarget[]>([]);
+  const [errDescr, setErrDescr] = useState<string[]>([]);
   const [sendConfirm, setSendConfirm] = useState(false);   
   const [description, setDescription] = useState('');
   const [inPost, setInPost] = useState(false);
@@ -107,7 +107,7 @@ export default function AddSchedule({ navigation }) {
     if (!meetingTargets.length){
        return;
     }
-    const mTargets = [];
+    const mTargets: MeetingTarget[] = [];
     const errDes = [];
     for (let i = 0; i < meetingTargets.length; i++){
        if (meetingTargets[i].name.trim()){
@@ -144,7 +144,7 @@ export default function AddSchedule({ navigation }) {
     if (!title.trim()){
       setTitle(title.trim());
       setTitleErr("Please type title, this field is required!");
-      titleEl.current.focus();
+      (titleEl.current as any).focus();
       return;
     }
     //Check if Dates is selected
@@ -185,8 +185,8 @@ export default function AddSchedule({ navigation }) {
     setInPost(true);
     const {data} = await axios.post(`${DOMAIN_URL}/api/addschedule`, dataObj, { headers: headers });
     setInPost(false);
-    let schedule: ScheduleStore = await AsyncStorage.getItem('schedule');
-    schedule = (schedule ? JSON.parse(schedule): []) as Activity[];
+    const scheduleStore: string | null = await AsyncStorage.getItem('schedule');
+    const schedule:  Activity[] = scheduleStore ? JSON.parse(scheduleStore): [];
     schedule.push(data);
     await AsyncStorage.setItem('schedule', JSON.stringify(schedule));
     await AsyncStorage.setItem('schedule_recent', data.created);

@@ -17,10 +17,10 @@ import { UserContext } from '../components/Context';
 import { DOMAIN_URL } from '../lib/constants';
 import {UserContextType} from '../lib/types';
 
-export default function UserInfo({ navigation }) {
+export default function UserInfo({ navigation }: { navigation: any;}) {
     const userContext: UserContextType = useContext(UserContext);
-    const [name, setName] = useState('');
-    const [nameerr, setNameErr] = useState('');
+    const [name, setName] = useState<string>('');
+    const [nameerr, setNameErr] = useState<string>('');
     const nameEl = useRef(null);
     const [passwd, setPasswd] = useState('');
     const [passwderr, setPasswdErr] = useState('');
@@ -50,7 +50,7 @@ export default function UserInfo({ navigation }) {
       //Check if Name is filled
       if (!name.trim()){
          setNameErr("Please type your name, this field is required!");
-         nameEl.current.focus();
+         (nameEl.current as any).focus();
          return;
       }
       
@@ -60,7 +60,7 @@ export default function UserInfo({ navigation }) {
       setInPost(false);
       if (data.no_authorization){
           setNameErr("No authorization to update");
-          nameEl.current.focus();
+          (nameEl.current as any).focus();
           return;
       }
         
@@ -75,7 +75,7 @@ export default function UserInfo({ navigation }) {
       //Check if Passwd is filled
       if (!passwd){
          setPasswdErr("Please type your password, this field is required!");
-         passwdEl.current.focus();
+         (passwdEl.current as any).focus();
          return;
       }
 
@@ -90,7 +90,7 @@ export default function UserInfo({ navigation }) {
       .has().not().spaces();                          // Should not have spaces
       if (!schema.validate(passwd)){
           setPasswdErr("The password you typed is not enough secured, please retype a new one. The password must have both uppercase and lowercase letters as well as minimum 2 digits.");
-          passwdEl.current.focus();
+          (passwdEl.current as any).focus();
           return;
       }
       
@@ -100,7 +100,7 @@ export default function UserInfo({ navigation }) {
       setInPost(false);
       if (data.no_authorization){
           setPasswdErr("No authorization to update");
-          passwdEl.current.focus();
+          (passwdEl.current as any).focus();
           return;
       }
       setUpdatePasswd(false);
@@ -118,7 +118,7 @@ export default function UserInfo({ navigation }) {
                     <Text style={styles.subjectText}>
                       Name: {userContext.user.name}  
                     </Text> 
-                    <Button mode="contained" onPress={() => {{setUpdateName(true); setName(userContext.user.name);}}}>
+                    <Button mode="contained" onPress={() => {{setUpdateName(true); setName(userContext.user.name as string);}}}>
                         Update Name
                      </Button>
                   </>
@@ -138,7 +138,7 @@ export default function UserInfo({ navigation }) {
                       <Button mode="contained"  style={{marginRight: 20}} onPress={() => submitNameUpdate()}>
                         Go Update Name
                       </Button>
-                      <Button mode="contained"  style={{marginRight: 20}} onPress={() => {setName(userContext.user.name);setNameErr('');}}>
+                      <Button mode="contained"  style={{marginRight: 20}} onPress={() => {setName(userContext.user.name as string);setNameErr('');}}>
                         Reset
                       </Button>
                     </View>

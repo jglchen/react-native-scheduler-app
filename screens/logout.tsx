@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {UserContext} from '../components/Context';
 import {UserContextType} from '../lib/types';
 
-export default function LogoutScreen({ navigation }) {
+export default function LogoutScreen({ navigation }: { navigation: any}) {
   const userContext: UserContextType = useContext(UserContext);
 
   useFocusEffect(
@@ -20,9 +20,9 @@ export default function LogoutScreen({ navigation }) {
   );
  
   async function removeData() {
-    navigation.dispatch(state => {
+    navigation.dispatch((state: any) => {
       // Remove all the routes except for Logout from the stack
-      const routes = state.routes.filter(r => r.name === 'Logout');
+      const routes = state.routes.filter((r: any) => r.name === 'Logout');
     
       return CommonActions.reset({
         ...state,
